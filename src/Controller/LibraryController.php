@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Mock\MockLibraryService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,10 +14,12 @@ class LibraryController extends ApiController
 {
 
     private MockLibraryService $libraryService;
+    private $logger;
 
-    public function __construct(MockLibraryService $libraryService)
+    public function __construct(MockLibraryService $libraryService, LoggerInterface $logger)
     {
         $this->libraryService = $libraryService;
+        $this->logger = $logger;
     }
 
     // With the @Route annotation, we can define the route for the controller method
@@ -40,6 +43,7 @@ class LibraryController extends ApiController
         //   "data" => $this->libraryService->getBooks()
         // ]);
 
+        $this->logger->info('Listing books');
         return $this->success($this->libraryService->getBooks());
     }
 }
