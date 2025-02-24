@@ -25,7 +25,7 @@ class LibraryController extends ApiController
     // #[Route('/library/{max}', name: 'app_lucky_number')]
     #[Route('/library/list', name: 'library_list')]
     // public function list(): Response
-    public function list(Response $response): JsonResponse
+    public function list(): JsonResponse
     {
 
         // $this->set(compact('books'));
