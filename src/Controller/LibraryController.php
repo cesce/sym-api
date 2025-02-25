@@ -48,16 +48,17 @@ class LibraryController extends ApiController
         // ]);
 
         // $this->logger->info('Listing books');
+        // dump($response);
         // return $this->success($this->libraryService->getBooks());
         
         $books = $bookRepository->findAll();
         $booksAsArray = [];
         foreach ($books as $book) {
-            $booksAsArray[] = [
-                'id' => $book->getId(),
-                'title' => $book->getTitle(),
-                'image' => $book->getImage()
-            ];
+          $booksAsArray[] = [
+            'id' => $book->getId(),
+            'title' => $book->getTitle(),
+            'image' => $book->getImage()
+          ];
         };
         return $this->success($booksAsArray);
     }
