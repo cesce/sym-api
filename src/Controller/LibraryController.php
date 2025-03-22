@@ -1,5 +1,5 @@
 <?php
-
+// src/Controller/LibraryController.php
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+// #[Route('/library', name: 'library')] // This will create this route prefix for all the controllers
 // class LibraryController extends AbstractController
 class LibraryController extends ApiController
 {
@@ -39,7 +40,7 @@ class LibraryController extends ApiController
 
         // Returns a Response object with a String
         // $response = new Response();
-        // $response->setContent('Library List');
+        // $response->setContent(<div>'Library List'</div>);
         // return $response;
 
         // return $this->json([
@@ -63,6 +64,7 @@ class LibraryController extends ApiController
         return $this->success($booksAsArray);
     }
 
+    // This method will accept form data, using $request->get('title', null)
     // #[Route('/book', name: 'create_book', methods: ['POST'])]
     #[Route('/book', name: 'create_book', methods: ['POST'])]
     public function createBook(Request $request, EntityManagerInterface $em): JsonResponse
@@ -78,6 +80,24 @@ class LibraryController extends ApiController
         // Manage the book creation not insert into the database
         $em->persist($book);
         // Execute the query and is sent to the database
+        $em->flush();
+        return $this->success($book);
+    }
+
+    #[Route('/books', name: 'create_a_book', methods: ['POST'])]
+    public function createABook(Request $request, EntityManagerInterface $em) : JsonResponse
+    {
+        $body = json_decode($request->getContent(), true);
+
+        // Validate the JSON-decoded body to ensure required fields exist
+        if (!isset($body['title']) || !isset($body['image'])) {
+            return $this->error('Invalid request payload', Response::HTTP_BAD_REQUEST);
+        }
+
+        $book = new Book();
+        $book->setTitle($body['title']);
+        $book->setImage($body['image']);
+        $em->persist($book);
         $em->flush();
         return $this->success($book);
     }
